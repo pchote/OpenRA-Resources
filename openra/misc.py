@@ -1,9 +1,15 @@
+# pylint: disable=line-too-long
+# pylint: disable=invalid-name
+# pylint: disable=missing-docstring
+# pylint: disable=too-many-locals
+# pylint: disable=too-many-branches
+# pylint: disable=too-many-statements
+# pylint: disable=too-many-arguments
+
 import os
 import shutil
 import datetime
 import time
-import pytz
-import copy
 from functools import reduce
 from django.core import mail
 from django.conf import settings
@@ -11,6 +17,7 @@ from django.contrib.auth.models import User
 from django.db.models import Count, Q
 from django.utils import timezone
 from allauth.socialaccount.models import SocialAccount
+import pytz
 from openra.models import Maps, MapCategories, Comments, UnsubscribeComments
 
 
@@ -96,7 +103,8 @@ def send_email_to_admin_OnReport(args):
 def send_email_to_user_OnReport(args):
     mail_addr = return_email(args['owner_id'])
     if mail_addr == "":
-        return False
+        return
+
     connection = mail.get_connection()
     connection.open()
     body = "Your %s has been reported: %s \nReason: %s" % (args['resource_type'], args['addr'], args['reason'])
@@ -125,7 +133,8 @@ def send_email_to_user_OnLint(email_addr, body):
 
 def send_email_to_user_OnComment(item_type, item_id, email_addr, info=""):
     if not email_addr:
-        return False
+        return
+
     http_host = 'http://resource.openra.net'
     connection = mail.get_connection()
     connection.open()
@@ -175,10 +184,11 @@ def get_account_link(userid):
 
 
 def sizeof_fmt(disk_size):
-    for x in ['bytes', 'KB', 'MB', 'GB', 'TB']:
+    for x in ['bytes', 'KB', 'MB', 'GB']:
         if disk_size < 1024.0:
-            return "%3.1f %s" % (disk_size, x)
+            return "{0:.1f} {1}".format(disk_size, x)
         disk_size /= 1024.0
+    return "{0:.1f} TB".format(disk_size)
 
 
 def count_comments_for_many(mapObject, item_type):
@@ -485,4 +495,3 @@ def build_utility_command(parser, game_mod, args):
         game_mod = 'ra'
 
     return 'mono --debug %s %s %s' % (os.path.join(settings.OPENRA_ROOT_PATH, parser, 'OpenRA.Utility.exe'), game_mod, ' '.join(args))
-

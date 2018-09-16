@@ -1,13 +1,19 @@
+# pylint: disable=line-too-long
+# pylint: disable=invalid-name
+# pylint: disable=missing-docstring
+# pylint: disable=too-many-locals
+# pylint: disable=too-many-branches
+# pylint: disable=too-many-statements
+# pylint: disable=too-many-arguments
+
 import os
 import shutil
 import zipfile
 import string
 import random
-import signal
 import json
 import base64
 import time
-import multiprocessing
 from subprocess import Popen, PIPE
 from django.conf import settings
 from django.utils import timezone
@@ -180,10 +186,10 @@ def map_upgrade(mapObject, engine, parser=settings.OPENRA_VERSIONS[0], new_rev_o
 
                 if item.advanced_map:
                     log_transac = MapUpgradeLogs(
-                        map_id          = item,
-                        from_version    = engine,
-                        to_version      = parser,
-                        upgrade_output  = upgrade_output
+                        map_id=item,
+                        from_version=engine,
+                        to_version=parser,
+                        upgrade_output=upgrade_output
                     )
                     log_transac.save()
             else:
@@ -231,10 +237,10 @@ def map_upgrade(mapObject, engine, parser=settings.OPENRA_VERSIONS[0], new_rev_o
 
                 if item.advanced_map:
                     log_transac = MapUpgradeLogs(
-                        map_id          = transac,
-                        from_version    = engine,
-                        to_version      = parser,
-                        upgrade_output  = upgrade_output
+                        map_id=transac,
+                        from_version=engine,
+                        to_version=parser,
+                        upgrade_output=upgrade_output
                     )
                     log_transac.save()
 

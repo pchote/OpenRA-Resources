@@ -1,19 +1,18 @@
+# pylint: disable=line-too-long
+# pylint: disable=invalid-name
+# pylint: disable=missing-docstring
+# pylint: disable=too-many-locals
+
 import shutil
 import os
 import zipfile
-import string
 import re
-import signal
-import random
-import yaml
-import json
 from subprocess import Popen, PIPE
-import multiprocessing
 
 from django.conf import settings
 from django.utils import timezone
 from django.contrib.auth.models import User
-from openra.models import Maps, Lints, Screenshots
+from openra.models import Maps, Screenshots
 from openra import utility, misc
 
 class MapHandlers():
@@ -104,7 +103,7 @@ class MapHandlers():
 
         # Read Rules
         base64_rules = utility.ReadRules(False, tempname, parser, resp_map_data['game_mod'])
-        if (base64_rules['error']):
+        if base64_rules['error']:
             print(base64_rules['response'])
 
         if base64_rules['advanced']:
@@ -226,7 +225,6 @@ class MapHandlers():
 
     def LegacyImport(self, mapPath, parser=settings.OPENRA_VERSIONS[0]):
         for mod in ['ra', 'cnc']:
-
             assign_mod = mod
             if mod == 'cnc':
                 assign_mod = 'td'
@@ -236,12 +234,11 @@ class MapHandlers():
 
             if "Error" in proc[0].decode():
                 continue
-            else:
-                if "saved" in proc[0].decode():
-                    self.legacy_name = proc[0].decode().split("\n")[-2].split(' saved')[0]
-                    return True
-                else:
-                    continue
+
+            if "saved" in proc[0].decode():
+                self.legacy_name = proc[0].decode().split("\n")[-2].split(' saved')[0]
+                return True
+
         return False
 
 
@@ -249,11 +246,11 @@ def addScreenshot(request, arg, item):
     if item == 'map':
         Object = Maps.objects.filter(id=arg)
         if not Object:
-            return False
+            return
         if not (Object[0].user_id == request.user.id or request.user.is_superuser):
-            return False
+            return
     else:
-        return False
+        return
     tempname = '/tmp/screenshot.temp'
     with open(tempname, 'wb+') as destination:
         for chunk in request.FILES['screenshot'].chunks():
@@ -263,7 +260,7 @@ def addScreenshot(request, arg, item):
     proc = Popen(command.split(), stdout=PIPE).communicate()
     mimetype = proc[0].decode().strip()
     if mimetype not in ['image/jpeg', 'image/png', 'image/gif']:
-        return False
+        return
 
     map_preview = False
     preview = request.POST.get('map_preview', None)

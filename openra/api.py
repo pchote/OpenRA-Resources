@@ -1,3 +1,7 @@
+# pylint: disable=line-too-long
+# pylint: disable=missing-docstring
+# pylint: disable=invalid-name
+
 import os
 import json
 import base64

@@ -1,11 +1,13 @@
-import os
+# pylint: disable=line-too-long
+# pylint: disable=missing-docstring
+# pylint: disable=invalid-name
+
 import json
 from django.utils import timezone
 from django.http import StreamingHttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from openra.models import Maps, Rating
-
 
 @csrf_exempt
 def jRating(request, arg):
